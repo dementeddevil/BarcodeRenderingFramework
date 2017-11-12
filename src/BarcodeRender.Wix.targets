@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+****************************************************************************************************
+BarcodeRender.Wix.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+		  created a backup copy.  Incorrect changes to this file will make it
+		  impossible to load or build your projects from the command-line or the IDE.
+
+This file manages the shared versioning support needed to synchronise all project assembly file
+version numbers and WiX build version numbers
+
+Copyright © Zen Design Corp 2011 - 2012.  All rights reserved.
+****************************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+				 ToolsVersion="4.0">
+
+	<!-- This makes the project files a dependency of all targets so that things rebuild if they change -->
+	<PropertyGroup>
+		<MSBuildAllProjects>$(MSBuildAllProjects);BarcodeRender.Wix.targets;</MSBuildAllProjects>
+	</PropertyGroup>
+
+	<Import Project="BarcodeRender.Common.targets" />
+
+	<ItemGroup>
+		<!-- Do NOT include this file here - it must be included by the wix preprocessor -->
+		<!--<Compile Include="$(WiXAssemblyVersionFile)">
+			<Link>SharedProductVersion.wxs</Link>
+			<Visible>true</Visible>
+		</Compile>-->
+	</ItemGroup>
+
+</Project>

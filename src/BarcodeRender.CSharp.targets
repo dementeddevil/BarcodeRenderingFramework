@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+****************************************************************************************************
+BarcodeRender.CSharp.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+		  created a backup copy.  Incorrect changes to this file will make it
+		  impossible to load or build your projects from the command-line or the IDE.
+
+This file manages the shared versioning support needed to synchronise all project assembly file
+version numbers and WiX build version numbers
+
+Copyright © Zen Design Corp 2011 - 2012.  All rights reserved.
+****************************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+				 ToolsVersion="4.0">
+
+	<PropertyGroup>
+		<!-- This makes the project files a dependency of all targets so that things rebuild if they change -->
+		<MSBuildAllProjects>$(MSBuildAllProjects);BarcodeRender.CSharp.targets;</MSBuildAllProjects>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Signed Release'">
+		<!-- Specify signing key if we are doing an official build -->
+		<AssemblyOriginatorKeyFile>..\Signing\BarcodeRender.pfx</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Signed Release x64'">
+		<!-- Specify signing key if we are doing an official build -->
+		<AssemblyOriginatorKeyFile>..\Signing\BarcodeRender.pfx</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+	<Import Project="BarcodeRender.Common.targets" />
+
+	<ItemGroup>
+		<!-- Include the current company info in all of the C# projects. -->
+		<Compile Include="$(CSharpSuiteProductInfoFile)">
+			<Link>Properties\SharedAssemblySuiteInfo.cs</Link>
+			<ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+			<Visible>true</Visible>
+		</Compile>
+
+		<!-- Include the current assembly version in all of the C# projects. -->
+		<Compile Include="$(CSharpCoreAssemblyVersionFile)">
+			<Link>Properties\SharedAssemblyVersion.cs</Link>
+			<ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+			<Visible>true</Visible>
+		</Compile>
+
+		<!-- Include the current assembly file version in all of the C# projects. -->
+		<Compile Include="$(CSharpAssemblyVersionFile)">
+			<Link>Properties\SharedAssemblyFileVersion.cs</Link>
+			<ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+			<Visible>true</Visible>
+		</Compile>
+	</ItemGroup>
+
+	<!-- Include signing key if we are doing an official build -->
+	<ItemGroup>
+		<None Include="..\Signing\BarcodeRender.pfx" />
+	</ItemGroup>
+
+</Project>

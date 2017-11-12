@@ -1,17 +1,17 @@
 //-----------------------------------------------------------------------
 // <copyright file="Code25.cs" company="Zen Design Corp">
-//     Copyright © Zen Design Corp 2008 - 2011. All rights reserved.
+//     Copyright © Zen Design Corp 2008 - 2012. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
 
 namespace Zen.Barcode
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Text;
+	using System;
+	using System.Collections.Generic;
+	using System.Drawing;
+	using System.Text;
 
-    /// <summary>
+	/// <summary>
 	/// <b>Code25GlyphFactory</b> base class for all code 25 
 	/// <see cref="GlyphFactory"/> objects.
 	/// </summary>
@@ -20,7 +20,7 @@ namespace Zen.Barcode
 		#region Private Fields
 		private static Code25StandardGlyphFactory _theStdFactory;
 		private static Code25InterleavedGlyphFactory _theIntFactory;
-		private static object _syncFactory = new object ();
+		private static object _syncFactory = new object();
 		#endregion
 
 		#region Protected Constructors
@@ -28,7 +28,7 @@ namespace Zen.Barcode
 		/// Initializes a new instance of the 
 		/// <see cref="T:Code25GlyphFactory"/> class.
 		/// </summary>
-		protected Code25GlyphFactory ()
+		protected Code25GlyphFactory()
 		{
 		}
 		#endregion
@@ -48,7 +48,7 @@ namespace Zen.Barcode
 					{
 						if (_theStdFactory == null)
 						{
-							_theStdFactory = new Code25StandardGlyphFactory ();
+							_theStdFactory = new Code25StandardGlyphFactory();
 						}
 					}
 				}
@@ -70,7 +70,7 @@ namespace Zen.Barcode
 					{
 						if (_theIntFactory == null)
 						{
-							_theIntFactory = new Code25InterleavedGlyphFactory ();
+							_theIntFactory = new Code25InterleavedGlyphFactory();
 						}
 					}
 				}
@@ -86,7 +86,7 @@ namespace Zen.Barcode
 		/// bar-code symbology.
 		/// </summary>
 		/// <returns></returns>
-		protected override CompositeGlyph[] GetCompositeGlyphs ()
+		protected override CompositeGlyph[] GetCompositeGlyphs()
 		{
 			return new CompositeGlyph[0];
 		}
@@ -109,7 +109,7 @@ namespace Zen.Barcode
 		/// Initializes a new instance of the 
 		/// <see cref="T:Code25StandardGlyphFactory"/> class.
 		/// </summary>
-		public Code25StandardGlyphFactory ()
+		public Code25StandardGlyphFactory()
 		{
 		}
 		#endregion
@@ -120,7 +120,7 @@ namespace Zen.Barcode
 		/// represent the raw bar-code glyphs for the given bar-code symbology.
 		/// </summary>
 		/// <returns></returns>
-		protected override BarGlyph[] GetGlyphs ()
+		protected override BarGlyph[] GetGlyphs()
 		{
 			if (_glyphs == null)
 			{
@@ -150,7 +150,7 @@ namespace Zen.Barcode
 	/// <see cref="GlyphFactory"/> for providing Code 25 bar-code glyph
 	/// objects.
 	/// </summary>
-	public sealed class Code25InterleavedGlyphFactory: Code25GlyphFactory
+	public sealed class Code25InterleavedGlyphFactory : Code25GlyphFactory
 	{
 		#region Private Fields
 		private BarGlyph[] _glyphs;
@@ -161,7 +161,7 @@ namespace Zen.Barcode
 		/// Initializes a new instance of the 
 		/// <see cref="T:Code25InterleavedGlyphFactory"/> class.
 		/// </summary>
-		public Code25InterleavedGlyphFactory ()
+		public Code25InterleavedGlyphFactory()
 		{
 		}
 		#endregion
@@ -172,7 +172,7 @@ namespace Zen.Barcode
 		/// represent the raw bar-code glyphs for the given bar-code symbology.
 		/// </summary>
 		/// <returns></returns>
-		protected override BarGlyph[] GetGlyphs ()
+		protected override BarGlyph[] GetGlyphs()
 		{
 			if (_glyphs == null)
 			{
@@ -209,15 +209,15 @@ namespace Zen.Barcode
 		#region Private Fields
 		private static Code25Checksum _theStdChecksum;
 		private static Code25Checksum _theIntChecksum;
-		private static object _syncChecksum = new object ();
+		private static object _syncChecksum = new object();
 		#endregion
 
 		#region Private Constructors
 		/// <summary>
 		/// Initialises a new instance of <see cref="T:Code25Checksum"/> class.
 		/// </summary>
-		private Code25Checksum (Code25GlyphFactory factory)
-			: base (factory)
+		private Code25Checksum(Code25GlyphFactory factory)
+			: base(factory)
 		{
 		}
 		#endregion
@@ -236,7 +236,7 @@ namespace Zen.Barcode
 					{
 						if (_theStdChecksum == null)
 						{
-							_theStdChecksum = new Code25Checksum (
+							_theStdChecksum = new Code25Checksum(
 								Code25GlyphFactory.StandardInstance);
 						}
 					}
@@ -258,7 +258,7 @@ namespace Zen.Barcode
 					{
 						if (_theIntChecksum == null)
 						{
-							_theIntChecksum = new Code25Checksum (
+							_theIntChecksum = new Code25Checksum(
 								Code25GlyphFactory.InterleavedInstance);
 						}
 					}
@@ -276,11 +276,11 @@ namespace Zen.Barcode
 		/// <param name="text">The text.</param>
 		/// <param name="allowComposite">if set to <c>true</c> [allow composite].</param>
 		/// <returns></returns>
-		public override Glyph[] GetChecksum (string text, bool allowComposite)
+		public override Glyph[] GetChecksum(string text, bool allowComposite)
 		{
-			if (string.IsNullOrEmpty (text))
+			if (string.IsNullOrEmpty(text))
 			{
-				throw new ArgumentNullException ("text");
+				throw new ArgumentNullException("text");
 			}
 
 			// Determine checksum
@@ -289,9 +289,9 @@ namespace Zen.Barcode
 			for (int index = text.Length - 1; index >= 0; --index, even = !even)
 			{
 				char ch = text[index];
-				if (!char.IsDigit (ch))
+				if (!char.IsDigit(ch))
 				{
-					throw new InvalidOperationException ("text contains invalid characters - numbers only.");
+					throw new InvalidOperationException("text contains invalid characters - numbers only.");
 				}
 
 				int digit = (ch - '0');
@@ -306,7 +306,7 @@ namespace Zen.Barcode
 			}
 
 			int checkDigit = 10 - ((evenTotal + oddTotal) % 10);
-			return new Glyph[] { Factory.GetRawGlyph (checkDigit) };
+			return new Glyph[] { Factory.GetRawGlyph(checkDigit) };
 		}
 		#endregion
 	}
@@ -324,8 +324,8 @@ namespace Zen.Barcode
 		/// class.
 		/// </summary>
 		/// <param name="factory">The factory.</param>
-		public Code25BarcodeDraw (Code25GlyphFactory factory)
-			: base (factory, 0)
+		public Code25BarcodeDraw(Code25GlyphFactory factory)
+			: base(factory, 0)
 		{
 		}
 
@@ -334,8 +334,8 @@ namespace Zen.Barcode
 		/// class.
 		/// </summary>
 		/// <param name="checksum">The checksum.</param>
-		public Code25BarcodeDraw (Code25Checksum checksum)
-			: base (checksum.Factory, checksum, 0)
+		public Code25BarcodeDraw(Code25Checksum checksum)
+			: base(checksum.Factory, checksum, 0)
 		{
 		}
 		#endregion
@@ -346,35 +346,35 @@ namespace Zen.Barcode
 		/// containing default settings for the specified maximum bar height.
 		/// </summary>
 		/// <param name="maxHeight">The maximum barcode height.</param>
-        /// <returns>
-        /// A <see cref="T:BarcodeMetrics"/> object.
-        /// </returns>
-        public override BarcodeMetrics GetDefaultMetrics(int maxHeight)
+		/// <returns>
+		/// A <see cref="T:BarcodeMetrics"/> object.
+		/// </returns>
+		public override BarcodeMetrics GetDefaultMetrics(int maxHeight)
 		{
-			return new BarcodeMetrics (1, 1, maxHeight);
+			return new BarcodeMetrics1d(1, 1, maxHeight);
 		}
 
-        /// <summary>
-        /// Overridden. Gets a <see cref="T:BarcodeMetrics"/> object containing the print
-        /// metrics needed for printing a barcode of the specified physical
-        /// size on a device operating at the specified resolution.
-        /// </summary>
-        /// <param name="desiredBarcodeDimensions">The desired barcode dimensions in hundredth of an inch.</param>
-        /// <param name="printResolution">The print resolution in pixels per inch.</param>
-        /// <param name="barcodeCharLength">Length of the barcode in characters.</param>
-        /// <returns>
-        /// A <see cref="T:BarcodeMetrics"/> object.
-        /// </returns>
-        public override BarcodeMetrics GetPrintMetrics(
-            Size desiredBarcodeDimensions, Size printResolution,
-            int barcodeCharLength)
-        {
-            int maxHeight = desiredBarcodeDimensions.Height * printResolution.Height / 100;
-            int narrowBarWidth = (printResolution.Width * desiredBarcodeDimensions.Width) /
-                (100 * (24 + (barcodeCharLength * 11)));
-            return new BarcodeMetrics(narrowBarWidth, maxHeight);
-        }
-        #endregion
+		/// <summary>
+		/// Overridden. Gets a <see cref="T:BarcodeMetrics"/> object containing the print
+		/// metrics needed for printing a barcode of the specified physical
+		/// size on a device operating at the specified resolution.
+		/// </summary>
+		/// <param name="desiredBarcodeDimensions">The desired barcode dimensions in hundredth of an inch.</param>
+		/// <param name="printResolution">The print resolution in pixels per inch.</param>
+		/// <param name="barcodeCharLength">Length of the barcode in characters.</param>
+		/// <returns>
+		/// A <see cref="T:BarcodeMetrics"/> object.
+		/// </returns>
+		public override BarcodeMetrics GetPrintMetrics(
+			Size desiredBarcodeDimensions, Size printResolution,
+			int barcodeCharLength)
+		{
+			int maxHeight = desiredBarcodeDimensions.Height * printResolution.Height / 100;
+			int narrowBarWidth = (printResolution.Width * desiredBarcodeDimensions.Width) /
+				(100 * (24 + (barcodeCharLength * 11)));
+			return new BarcodeMetrics1d(narrowBarWidth, maxHeight);
+		}
+		#endregion
 
 		#region Protected Methods
 		/// <summary>
@@ -382,9 +382,9 @@ namespace Zen.Barcode
 		/// </summary>
 		/// <param name="text">Text to convert into bar-code.</param>
 		/// <returns>A collection of <see cref="T:Glyph"/> objects.</returns>
-		protected override Glyph[] GetFullBarcode (string text)
+		protected override Glyph[] GetFullBarcode(string text)
 		{
-			List<Glyph> result = new List<Glyph> ();
+			List<Glyph> result = new List<Glyph>();
 
 			// If text is odd length
 			if (Factory is Code25InterleavedGlyphFactory)
@@ -402,16 +402,16 @@ namespace Zen.Barcode
 				}
 			}
 
-			result.AddRange (Factory.GetGlyphs (text));
+			result.AddRange(Factory.GetGlyphs(text));
 			if (Checksum != null)
 			{
-				result.AddRange (Checksum.GetChecksum (text));
+				result.AddRange(Checksum.GetChecksum(text));
 			}
 
 			// Add start/stop glyphs
-			result.Insert (0, Factory.GetRawGlyph ('-'));
-			result.Add (Factory.GetRawGlyph ('*'));
-			return result.ToArray ();
+			result.Insert(0, Factory.GetRawGlyph('-'));
+			result.Add(Factory.GetRawGlyph('*'));
+			return result.ToArray();
 		}
 
 		/// <summary>
@@ -420,7 +420,7 @@ namespace Zen.Barcode
 		/// <param name="barMinWidth"></param>
 		/// <param name="barMaxWidth"></param>
 		/// <returns></returns>
-		protected override int GetDefaultInterGlyphSpace (int barMinWidth, int barMaxWidth)
+		protected override int GetDefaultInterGlyphSpace(int barMinWidth, int barMaxWidth)
 		{
 			if (Factory is Code25StandardGlyphFactory)
 			{
@@ -499,7 +499,7 @@ namespace Zen.Barcode
 					// We need to render two glyphs at the same time
 					int encodingBitCount = 5;
 					BarGlyph firstGlyph = (BarGlyph)barcode[index];
-					BarGlyph secondGlyph = (BarGlyph)barcode[index +1];
+					BarGlyph secondGlyph = (BarGlyph)barcode[index + 1];
 
 					// Get the bit encoding for each glyph
 
@@ -536,7 +536,7 @@ namespace Zen.Barcode
 				// Account for inter glyph spacing
 				barOffset += interGlyphSpace;
 			}
-			
+
 		}
 		#endregion
 	}

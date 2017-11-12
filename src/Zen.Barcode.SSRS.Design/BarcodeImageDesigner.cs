@@ -26,7 +26,7 @@ namespace Zen.Barcode.SSRS.Design
 	{
 		#region Private Fields
 		private int _inSuspendValidate;
-		private bool _pendingInvalidate; 
+		private bool _pendingInvalidate;
 		#endregion
 
 		#region Public Constructors
@@ -35,7 +35,7 @@ namespace Zen.Barcode.SSRS.Design
 		/// </summary>
 		public BarcodeImageDesigner()
 		{
-		} 
+		}
 		#endregion
 
 		#region Public Properties
@@ -105,13 +105,27 @@ namespace Zen.Barcode.SSRS.Design
 					BarcodeDraw drawObject = BarcodeDrawFactory.GetSymbology(value);
 					BarcodeMetrics drawMetrics = drawObject.GetDefaultMetrics(MaximumBarHeight);
 
+					Scale = drawMetrics.Scale;
+
 					using (IDisposable disp = new BarcodeDesignerEditScope(this))
 					{
-						MinimumBarHeight = drawMetrics.MinHeight;
-						MaximumBarHeight = drawMetrics.MaxHeight;
-						MinimumBarWidth = drawMetrics.MinWidth;
-						MaximumBarWidth = drawMetrics.MaxWidth;
-						InterGlyphSpacing = drawMetrics.InterGlyphSpacing;
+						BarcodeMetrics1d metrics1d = drawMetrics as BarcodeMetrics1d;
+						if (metrics1d != null)
+						{
+							MinimumBarHeight = metrics1d.MinHeight;
+							MaximumBarHeight = metrics1d.MaxHeight;
+							MinimumBarWidth = metrics1d.MinWidth;
+							MaximumBarWidth = metrics1d.MaxWidth;
+							InterGlyphSpacing = metrics1d.InterGlyphSpacing;
+							RenderVertically = metrics1d.RenderVertically;
+						}
+						else if (value == BarcodeSymbology.CodeQr)
+						{
+							BarcodeMetricsQr metricsQr = (BarcodeMetricsQr)drawMetrics;
+							QrEncodingMode = metricsQr.EncodeMode;
+							QrErrorCorrectionMode = metricsQr.ErrorCorrection;
+							QrVersion = metricsQr.Version;
+						}
 					}
 				}
 			}
@@ -135,6 +149,29 @@ namespace Zen.Barcode.SSRS.Design
 				if (Text != value)
 				{
 					SetCustomProperty("barcode:Text", value);
+					InvalidateIfPossible();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the scale factor used to render the barcode.
+		/// </summary>
+		/// <value>The scale factor.</value>
+		[Browsable(true)]
+		[Category("Barcode")]
+		[Description("Gets or sets the scale factor used to render the barcode.")]
+		public int Scale
+		{
+			get
+			{
+				return GetCustomPropertyInt32("barcode:Scale", 1);
+			}
+			set
+			{
+				if (Scale != value)
+				{
+					SetCustomProperty("barcode:Scale", value);
 					InvalidateIfPossible();
 				}
 			}
@@ -301,21 +338,154 @@ namespace Zen.Barcode.SSRS.Design
 		[Browsable(true)]
 		[Category("Barcode")]
 		[Description("Gets or sets the inter-glyph spacing.")]
-		public int InterGlyphSpacing
+		public int? InterGlyphSpacing
 		{
 			get
 			{
-				return GetCustomPropertyInt32("barcode:InterGlyphSpacing", 1);
+				int spacing = GetCustomPropertyInt32("barcode:InterGlyphSpacing", -1);
+				if (spacing == -1)
+				{
+					return null;
+				}
+				return spacing;
 			}
 			set
 			{
 				if (InterGlyphSpacing != value)
 				{
-					SetCustomProperty("barcode:InterGlyphSpacing", value);
+					if (value == null)
+					{
+						SetCustomProperty("barcode:InterGlyphSpacing", -1);
+					}
+					else
+					{
+						SetCustomProperty("barcode:InterGlyphSpacing", value.Value);
+					}
 					InvalidateIfPossible();
 				}
 			}
-		} 
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to render barcode vertically.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> to render barcode vertically; otherwise, <c>false</c>.
+		/// </value>
+		[Browsable(true)]
+		[Category("Barcode")]
+		[Description("Gets or sets whether to draw barcode vertically.")]
+		public bool RenderVertically
+		{
+			get
+			{
+				return GetCustomPropertyBool("barcode:RenderVertically", false);
+			}
+			set
+			{
+				if (RenderVertically != value)
+				{
+					SetCustomProperty("barcode:RenderVertically", value);
+					InvalidateIfPossible();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the version used to render QR 2D barcode.
+		/// </summary>
+		/// <value>The qr version.</value>
+		/// <remarks>
+		/// Using 0 here will allow the code to use the best version for the
+		/// content to render (which could lead to variable sized QR codes if
+		/// your content varies wildly - best to set to a value that can
+		/// accomodate all your data values...
+		/// </remarks>
+		[Browsable(true)]
+		[Category("QR Barcode")]
+		[Description("Gets or sets the version used to render QR 2D barcode.")]
+		public int? QrVersion
+		{
+			get
+			{
+				if (Symbology != BarcodeSymbology.CodeQr)
+				{
+					return null;
+				}
+				return GetCustomPropertyInt32("barcode:QrVersion", 3);
+			}
+			set
+			{
+				if (Symbology == BarcodeSymbology.CodeQr && value != null && QrVersion != value)
+				{
+					if (value < 0 || value > 40)
+					{
+						throw new ArgumentOutOfRangeException(
+							"value", "Version out of range (0=auto, 1-40=version)");
+					}
+					SetCustomProperty("barcode:QrVersion", value.Value);
+					InvalidateIfPossible();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the encoding mode used to render a QR 2D barcode.
+		/// </summary>
+		/// <value>
+		/// A value from the <see cref="QrEncodeMode"/> enumeration.
+		/// </value>
+		[Browsable(true)]
+		[Category("QR Barcode")]
+		[Description("Gets or sets the encoding mode used to render QR 2D barcode.")]
+		public QrEncodeMode? QrEncodingMode
+		{
+			get
+			{
+				if (Symbology != BarcodeSymbology.CodeQr)
+				{
+					return null;
+				}
+				return (QrEncodeMode)GetCustomPropertyInt32("barcode:QrEncodeMode", (int)QrEncodeMode.Byte);
+			}
+			set
+			{
+				if (Symbology == BarcodeSymbology.CodeQr && value != null && QrEncodingMode != value)
+				{
+					SetCustomProperty("barcode:QrEncodeMode", (int)value.Value);
+					InvalidateIfPossible();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the error correction used when rendering a QR 2D barcode.
+		/// </summary>
+		/// <value>
+		/// A value from the <see cref="QrErrorCorrection"/> enumeration.
+		/// </value>
+		[Browsable(true)]
+		[Category("QR Barcode")]
+		[Description("Gets or sets the error correction mode used to render QR 2D barcode.")]
+		public QrErrorCorrection? QrErrorCorrectionMode
+		{
+			get
+			{
+				if (Symbology != BarcodeSymbology.CodeQr)
+				{
+					return null;
+				}
+				return (QrErrorCorrection)GetCustomPropertyInt32("barcode:QrErrorCorrection", (int)QrErrorCorrection.M);
+			}
+			set
+			{
+				if (Symbology == BarcodeSymbology.CodeQr && value != null && QrErrorCorrectionMode != value)
+				{
+					SetCustomProperty("barcode:QrErrorCorrection", (int)value.Value);
+					InvalidateIfPossible();
+				}
+			}
+		}
 		#endregion
 
 		#region Public Methods
@@ -345,8 +515,12 @@ namespace Zen.Barcode.SSRS.Design
 		/// <summary>
 		/// Draws the design-time representation of the barcode.
 		/// </summary>
-		/// <param name="g">The g.</param>
-		/// <param name="dp">The dp.</param>
+		/// <param name="g">
+		/// A <see cref="Graphics"/> object representing the designer surface.
+		/// </param>
+		/// <param name="dp">
+		/// A <see cref="ReportItemDrawParams"/> containing draw parameters.
+		/// </param>
 		public override void Draw(Graphics g, ReportItemDrawParams dp)
 		{
 			// Our background is always white
@@ -368,13 +542,37 @@ namespace Zen.Barcode.SSRS.Design
 			{
 				BarcodeDraw drawObject =
 					BarcodeDrawFactory.GetSymbology(Symbology);
-				using (System.Drawing.Image image = drawObject.Draw(
-					Text,
-					InterGlyphSpacing,
-					MinimumBarHeight,
-					MaximumBarHeight,
-					MinimumBarWidth,
-					MaximumBarWidth))
+
+				BarcodeMetrics metrics = drawObject.GetDefaultMetrics(30);
+				metrics.Scale = Scale;
+
+				BarcodeMetrics1d metrics1d = metrics as BarcodeMetrics1d;
+				if (metrics1d != null)
+				{
+					metrics1d.InterGlyphSpacing = InterGlyphSpacing;
+					metrics1d.MaxHeight = MaximumBarHeight;
+					metrics1d.MinHeight = MinimumBarHeight;
+					metrics1d.MaxWidth = MaximumBarWidth;
+					metrics1d.MinWidth = MinimumBarWidth;
+					metrics1d.RenderVertically = RenderVertically;
+				}
+				else if (Symbology == BarcodeSymbology.CodeQr)
+				{
+					BarcodeMetricsQr qrMetrics = (BarcodeMetricsQr)metrics;
+					if (QrVersion != null)
+					{
+						qrMetrics.Version = QrVersion.Value;
+					}
+					if (QrEncodingMode != null)
+					{
+						qrMetrics.EncodeMode = QrEncodingMode.Value;
+					}
+					if (QrErrorCorrectionMode != null)
+					{
+						qrMetrics.ErrorCorrection = QrErrorCorrectionMode.Value;
+					}
+				}
+				using (System.Drawing.Image image = drawObject.Draw(Text, metrics))
 				{
 					g.DrawImage(image, new Point(0, 0));
 				}
@@ -467,7 +665,28 @@ namespace Zen.Barcode.SSRS.Design
 			return value;
 		}
 
+		public bool GetCustomPropertyBool(string propertyName)
+		{
+			return GetCustomPropertyBool(propertyName, false);
+		}
+
+		public bool GetCustomPropertyBool(string propertyName, bool defaultValue)
+		{
+			bool value;
+			string valueText = GetCustomPropertyString(propertyName);
+			if (!Boolean.TryParse(valueText, out value))
+			{
+				value = defaultValue;
+			}
+			return value;
+		}
+
 		public void SetCustomProperty(string propertyName, int value)
+		{
+			SetCustomProperty(propertyName, value.ToString());
+		}
+
+		public void SetCustomProperty(string propertyName, bool value)
 		{
 			SetCustomProperty(propertyName, value.ToString());
 		}
@@ -492,7 +711,7 @@ namespace Zen.Barcode.SSRS.Design
 			{
 				CustomProperties[propertyName] = value;
 			}
-		} 
+		}
 		#endregion
 
 		#region Private Methods
@@ -577,7 +796,7 @@ namespace Zen.Barcode.SSRS.Design
 				Name = name,
 				Value = value
 			};
-		} 
+		}
 		#endregion
 	}
 

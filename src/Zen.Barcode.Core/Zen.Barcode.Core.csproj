@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -14,12 +15,30 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>BarcodeRender.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <OldToolsVersion>2.0</OldToolsVersion>
+    <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Zen.Barcode.Core.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +59,39 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Signed Release|AnyCPU'">
+    <OutputPath>bin\Signed Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Zen.Barcode.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Signed Release x64|AnyCPU'">
+    <OutputPath>bin\Signed Release x64\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Zen.Barcode.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -60,6 +113,7 @@
     <Compile Include="CodeEan13.cs" />
     <Compile Include="CodeEan8.cs" />
     <Compile Include="CodePdf417.cs" />
+    <Compile Include="CodeQr.cs" />
     <Compile Include="CompositeGlyph.cs" />
     <Compile Include="Code128.cs" />
     <Compile Include="Code11.cs" />
@@ -81,15 +135,263 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Barcode Classes.cd" />
-    <None Include="BarcodeRender.pfx" />
+    <EmbeddedResource Include="Resources\qrv10_0.dat" />
+    <EmbeddedResource Include="Resources\qrv10_1.dat" />
+    <EmbeddedResource Include="Resources\qrv10_2.dat" />
+    <EmbeddedResource Include="Resources\qrv10_3.dat" />
+    <EmbeddedResource Include="Resources\qrv11_0.dat" />
+    <EmbeddedResource Include="Resources\qrv11_1.dat" />
+    <EmbeddedResource Include="Resources\qrv11_2.dat" />
+    <EmbeddedResource Include="Resources\qrv11_3.dat" />
+    <EmbeddedResource Include="Resources\qrv12_0.dat" />
+    <EmbeddedResource Include="Resources\qrv12_1.dat" />
+    <EmbeddedResource Include="Resources\qrv12_2.dat" />
+    <EmbeddedResource Include="Resources\qrv12_3.dat" />
+    <EmbeddedResource Include="Resources\qrv13_0.dat" />
+    <EmbeddedResource Include="Resources\qrv13_1.dat" />
+    <EmbeddedResource Include="Resources\qrv13_2.dat" />
+    <EmbeddedResource Include="Resources\qrv13_3.dat" />
+    <EmbeddedResource Include="Resources\qrv14_0.dat" />
+    <EmbeddedResource Include="Resources\qrv14_1.dat" />
+    <EmbeddedResource Include="Resources\qrv14_2.dat" />
+    <EmbeddedResource Include="Resources\qrv14_3.dat" />
+    <EmbeddedResource Include="Resources\qrv15_0.dat" />
+    <EmbeddedResource Include="Resources\qrv15_1.dat" />
+    <EmbeddedResource Include="Resources\qrv15_2.dat" />
+    <EmbeddedResource Include="Resources\qrv15_3.dat" />
+    <EmbeddedResource Include="Resources\qrv16_0.dat" />
+    <EmbeddedResource Include="Resources\qrv16_1.dat" />
+    <EmbeddedResource Include="Resources\qrv16_2.dat" />
+    <EmbeddedResource Include="Resources\qrv16_3.dat" />
+    <EmbeddedResource Include="Resources\qrv17_0.dat" />
+    <EmbeddedResource Include="Resources\qrv17_1.dat" />
+    <EmbeddedResource Include="Resources\qrv17_2.dat" />
+    <EmbeddedResource Include="Resources\qrv17_3.dat" />
+    <EmbeddedResource Include="Resources\qrv18_0.dat" />
+    <EmbeddedResource Include="Resources\qrv18_1.dat" />
+    <EmbeddedResource Include="Resources\qrv18_2.dat" />
+    <EmbeddedResource Include="Resources\qrv18_3.dat" />
+    <EmbeddedResource Include="Resources\qrv19_0.dat" />
+    <EmbeddedResource Include="Resources\qrv19_1.dat" />
+    <EmbeddedResource Include="Resources\qrv19_2.dat" />
+    <EmbeddedResource Include="Resources\qrv19_3.dat" />
+    <EmbeddedResource Include="Resources\qrv1_0.dat" />
+    <EmbeddedResource Include="Resources\qrv1_1.dat" />
+    <EmbeddedResource Include="Resources\qrv1_2.dat" />
+    <EmbeddedResource Include="Resources\qrv1_3.dat" />
+    <EmbeddedResource Include="Resources\qrv20_0.dat" />
+    <EmbeddedResource Include="Resources\qrv20_1.dat" />
+    <EmbeddedResource Include="Resources\qrv20_2.dat" />
+    <EmbeddedResource Include="Resources\qrv20_3.dat" />
+    <EmbeddedResource Include="Resources\qrv21_0.dat" />
+    <EmbeddedResource Include="Resources\qrv21_1.dat" />
+    <EmbeddedResource Include="Resources\qrv21_2.dat" />
+    <EmbeddedResource Include="Resources\qrv21_3.dat" />
+    <EmbeddedResource Include="Resources\qrv22_0.dat" />
+    <EmbeddedResource Include="Resources\qrv22_1.dat" />
+    <EmbeddedResource Include="Resources\qrv22_2.dat" />
+    <EmbeddedResource Include="Resources\qrv22_3.dat" />
+    <EmbeddedResource Include="Resources\qrv23_0.dat" />
+    <EmbeddedResource Include="Resources\qrv23_1.dat" />
+    <EmbeddedResource Include="Resources\qrv23_2.dat" />
+    <EmbeddedResource Include="Resources\qrv23_3.dat" />
+    <EmbeddedResource Include="Resources\qrv24_0.dat" />
+    <EmbeddedResource Include="Resources\qrv24_1.dat" />
+    <EmbeddedResource Include="Resources\qrv24_2.dat" />
+    <EmbeddedResource Include="Resources\qrv24_3.dat" />
+    <EmbeddedResource Include="Resources\qrv25_0.dat" />
+    <EmbeddedResource Include="Resources\qrv25_1.dat" />
+    <EmbeddedResource Include="Resources\qrv25_2.dat" />
+    <EmbeddedResource Include="Resources\qrv25_3.dat" />
+    <EmbeddedResource Include="Resources\qrv26_0.dat" />
+    <EmbeddedResource Include="Resources\qrv26_1.dat" />
+    <EmbeddedResource Include="Resources\qrv26_2.dat" />
+    <EmbeddedResource Include="Resources\qrv26_3.dat" />
+    <EmbeddedResource Include="Resources\qrv27_0.dat" />
+    <EmbeddedResource Include="Resources\qrv27_1.dat" />
+    <EmbeddedResource Include="Resources\qrv27_2.dat" />
+    <EmbeddedResource Include="Resources\qrv27_3.dat" />
+    <EmbeddedResource Include="Resources\qrv28_0.dat" />
+    <EmbeddedResource Include="Resources\qrv28_1.dat" />
+    <EmbeddedResource Include="Resources\qrv28_2.dat" />
+    <EmbeddedResource Include="Resources\qrv28_3.dat" />
+    <EmbeddedResource Include="Resources\qrv29_0.dat" />
+    <EmbeddedResource Include="Resources\qrv29_1.dat" />
+    <EmbeddedResource Include="Resources\qrv29_2.dat" />
+    <EmbeddedResource Include="Resources\qrv29_3.dat" />
+    <EmbeddedResource Include="Resources\qrv2_0.dat" />
+    <EmbeddedResource Include="Resources\qrv2_1.dat" />
+    <EmbeddedResource Include="Resources\qrv2_2.dat" />
+    <EmbeddedResource Include="Resources\qrv2_3.dat" />
+    <EmbeddedResource Include="Resources\qrv30_0.dat" />
+    <EmbeddedResource Include="Resources\qrv30_1.dat" />
+    <EmbeddedResource Include="Resources\qrv30_2.dat" />
+    <EmbeddedResource Include="Resources\qrv30_3.dat" />
+    <EmbeddedResource Include="Resources\qrv31_0.dat" />
+    <EmbeddedResource Include="Resources\qrv31_1.dat" />
+    <EmbeddedResource Include="Resources\qrv31_2.dat" />
+    <EmbeddedResource Include="Resources\qrv31_3.dat" />
+    <EmbeddedResource Include="Resources\qrv32_0.dat" />
+    <EmbeddedResource Include="Resources\qrv32_1.dat" />
+    <EmbeddedResource Include="Resources\qrv32_2.dat" />
+    <EmbeddedResource Include="Resources\qrv32_3.dat" />
+    <EmbeddedResource Include="Resources\qrv33_0.dat" />
+    <EmbeddedResource Include="Resources\qrv33_1.dat" />
+    <EmbeddedResource Include="Resources\qrv33_2.dat" />
+    <EmbeddedResource Include="Resources\qrv33_3.dat" />
+    <EmbeddedResource Include="Resources\qrv34_0.dat" />
+    <EmbeddedResource Include="Resources\qrv34_1.dat" />
+    <EmbeddedResource Include="Resources\qrv34_2.dat" />
+    <EmbeddedResource Include="Resources\qrv34_3.dat" />
+    <EmbeddedResource Include="Resources\qrv35_0.dat" />
+    <EmbeddedResource Include="Resources\qrv35_1.dat" />
+    <EmbeddedResource Include="Resources\qrv35_2.dat" />
+    <EmbeddedResource Include="Resources\qrv35_3.dat" />
+    <EmbeddedResource Include="Resources\qrv36_0.dat" />
+    <EmbeddedResource Include="Resources\qrv36_1.dat" />
+    <EmbeddedResource Include="Resources\qrv36_2.dat" />
+    <EmbeddedResource Include="Resources\qrv36_3.dat" />
+    <EmbeddedResource Include="Resources\qrv37_0.dat" />
+    <EmbeddedResource Include="Resources\qrv37_1.dat" />
+    <EmbeddedResource Include="Resources\qrv37_2.dat" />
+    <EmbeddedResource Include="Resources\qrv37_3.dat" />
+    <EmbeddedResource Include="Resources\qrv38_0.dat" />
+    <EmbeddedResource Include="Resources\qrv38_1.dat" />
+    <EmbeddedResource Include="Resources\qrv38_2.dat" />
+    <EmbeddedResource Include="Resources\qrv38_3.dat" />
+    <EmbeddedResource Include="Resources\qrv39_0.dat" />
+    <EmbeddedResource Include="Resources\qrv39_1.dat" />
+    <EmbeddedResource Include="Resources\qrv39_2.dat" />
+    <EmbeddedResource Include="Resources\qrv39_3.dat" />
+    <EmbeddedResource Include="Resources\qrv3_0.dat" />
+    <EmbeddedResource Include="Resources\qrv3_1.dat" />
+    <EmbeddedResource Include="Resources\qrv3_2.dat" />
+    <EmbeddedResource Include="Resources\qrv3_3.dat" />
+    <EmbeddedResource Include="Resources\qrv40_0.dat" />
+    <EmbeddedResource Include="Resources\qrv40_1.dat" />
+    <EmbeddedResource Include="Resources\qrv40_2.dat" />
+    <EmbeddedResource Include="Resources\qrv40_3.dat" />
+    <EmbeddedResource Include="Resources\qrv4_0.dat" />
+    <EmbeddedResource Include="Resources\qrv4_1.dat" />
+    <EmbeddedResource Include="Resources\qrv4_2.dat" />
+    <EmbeddedResource Include="Resources\qrv4_3.dat" />
+    <EmbeddedResource Include="Resources\qrv5_0.dat" />
+    <EmbeddedResource Include="Resources\qrv5_1.dat" />
+    <EmbeddedResource Include="Resources\qrv5_2.dat" />
+    <EmbeddedResource Include="Resources\qrv5_3.dat" />
+    <EmbeddedResource Include="Resources\qrv6_0.dat" />
+    <EmbeddedResource Include="Resources\qrv6_1.dat" />
+    <EmbeddedResource Include="Resources\qrv6_2.dat" />
+    <EmbeddedResource Include="Resources\qrv6_3.dat" />
+    <EmbeddedResource Include="Resources\qrv7_0.dat" />
+    <EmbeddedResource Include="Resources\qrv7_1.dat" />
+    <EmbeddedResource Include="Resources\qrv7_2.dat" />
+    <EmbeddedResource Include="Resources\qrv7_3.dat" />
+    <EmbeddedResource Include="Resources\qrv8_0.dat" />
+    <EmbeddedResource Include="Resources\qrv8_1.dat" />
+    <EmbeddedResource Include="Resources\qrv8_2.dat" />
+    <EmbeddedResource Include="Resources\qrv8_3.dat" />
+    <EmbeddedResource Include="Resources\qrv9_0.dat" />
+    <EmbeddedResource Include="Resources\qrv9_1.dat" />
+    <EmbeddedResource Include="Resources\qrv9_2.dat" />
+    <EmbeddedResource Include="Resources\qrv9_3.dat" />
+    <EmbeddedResource Include="Resources\qrvfr1.dat" />
+    <EmbeddedResource Include="Resources\qrvfr10.dat" />
+    <EmbeddedResource Include="Resources\qrvfr11.dat" />
+    <EmbeddedResource Include="Resources\qrvfr12.dat" />
+    <EmbeddedResource Include="Resources\qrvfr13.dat" />
+    <EmbeddedResource Include="Resources\qrvfr14.dat" />
+    <EmbeddedResource Include="Resources\qrvfr15.dat" />
+    <EmbeddedResource Include="Resources\qrvfr16.dat" />
+    <EmbeddedResource Include="Resources\qrvfr17.dat" />
+    <EmbeddedResource Include="Resources\qrvfr18.dat" />
+    <EmbeddedResource Include="Resources\qrvfr19.dat" />
+    <EmbeddedResource Include="Resources\qrvfr2.dat" />
+    <EmbeddedResource Include="Resources\qrvfr20.dat" />
+    <EmbeddedResource Include="Resources\qrvfr21.dat" />
+    <EmbeddedResource Include="Resources\qrvfr22.dat" />
+    <EmbeddedResource Include="Resources\qrvfr23.dat" />
+    <EmbeddedResource Include="Resources\qrvfr24.dat" />
+    <EmbeddedResource Include="Resources\qrvfr25.dat" />
+    <EmbeddedResource Include="Resources\qrvfr26.dat" />
+    <EmbeddedResource Include="Resources\qrvfr27.dat" />
+    <EmbeddedResource Include="Resources\qrvfr28.dat" />
+    <EmbeddedResource Include="Resources\qrvfr29.dat" />
+    <EmbeddedResource Include="Resources\qrvfr3.dat" />
+    <EmbeddedResource Include="Resources\qrvfr30.dat" />
+    <EmbeddedResource Include="Resources\qrvfr31.dat" />
+    <EmbeddedResource Include="Resources\qrvfr32.dat" />
+    <EmbeddedResource Include="Resources\qrvfr33.dat" />
+    <EmbeddedResource Include="Resources\qrvfr34.dat" />
+    <EmbeddedResource Include="Resources\qrvfr35.dat" />
+    <EmbeddedResource Include="Resources\qrvfr36.dat" />
+    <EmbeddedResource Include="Resources\qrvfr37.dat" />
+    <EmbeddedResource Include="Resources\qrvfr38.dat" />
+    <EmbeddedResource Include="Resources\qrvfr39.dat" />
+    <EmbeddedResource Include="Resources\qrvfr4.dat" />
+    <EmbeddedResource Include="Resources\qrvfr40.dat" />
+    <EmbeddedResource Include="Resources\qrvfr5.dat" />
+    <EmbeddedResource Include="Resources\qrvfr6.dat" />
+    <EmbeddedResource Include="Resources\qrvfr7.dat" />
+    <EmbeddedResource Include="Resources\qrvfr8.dat" />
+    <EmbeddedResource Include="Resources\qrvfr9.dat" />
+    <EmbeddedResource Include="Resources\rsc10.dat" />
+    <EmbeddedResource Include="Resources\rsc13.dat" />
+    <EmbeddedResource Include="Resources\rsc15.dat" />
+    <EmbeddedResource Include="Resources\rsc16.dat" />
+    <EmbeddedResource Include="Resources\rsc17.dat" />
+    <EmbeddedResource Include="Resources\rsc18.dat" />
+    <EmbeddedResource Include="Resources\rsc20.dat" />
+    <EmbeddedResource Include="Resources\rsc22.dat" />
+    <EmbeddedResource Include="Resources\rsc24.dat" />
+    <EmbeddedResource Include="Resources\rsc26.dat" />
+    <EmbeddedResource Include="Resources\rsc28.dat" />
+    <EmbeddedResource Include="Resources\rsc30.dat" />
+    <EmbeddedResource Include="Resources\rsc32.dat" />
+    <EmbeddedResource Include="Resources\rsc34.dat" />
+    <EmbeddedResource Include="Resources\rsc36.dat" />
+    <EmbeddedResource Include="Resources\rsc40.dat" />
+    <EmbeddedResource Include="Resources\rsc42.dat" />
+    <EmbeddedResource Include="Resources\rsc44.dat" />
+    <EmbeddedResource Include="Resources\rsc46.dat" />
+    <EmbeddedResource Include="Resources\rsc48.dat" />
+    <EmbeddedResource Include="Resources\rsc50.dat" />
+    <EmbeddedResource Include="Resources\rsc52.dat" />
+    <EmbeddedResource Include="Resources\rsc54.dat" />
+    <EmbeddedResource Include="Resources\rsc56.dat" />
+    <EmbeddedResource Include="Resources\rsc58.dat" />
+    <EmbeddedResource Include="Resources\rsc60.dat" />
+    <EmbeddedResource Include="Resources\rsc62.dat" />
+    <EmbeddedResource Include="Resources\rsc64.dat" />
+    <EmbeddedResource Include="Resources\rsc66.dat" />
+    <EmbeddedResource Include="Resources\rsc68.dat" />
+    <EmbeddedResource Include="Resources\rsc7.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <Import Project="..\BarcodeRender.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

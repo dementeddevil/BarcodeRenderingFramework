@@ -19,6 +19,10 @@
 				<td><asp:DropDownList ID="barcodeSymbology" runat="server" /></td>
 			</tr>
 			<tr>
+				<td><asp:Label ID="barcodeScaleLabel" runat="server" Text="Barcode Scale" /></td>
+				<td><asp:TextBox ID="barcodeScale" runat="server" Text="1" /></td>
+			</tr>
+			<tr>
 				<td colspan="2"><asp:Button ID="updateButton" runat="server" Text="Update" OnClick="updateButton_Click" /></td>
 			</tr>
 			<tr>

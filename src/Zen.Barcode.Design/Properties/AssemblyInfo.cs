@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Zen Barcode Designer")]
 [assembly: AssemblyDescription("Barcode Rendering Framework design-time components.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Zen Design Corp")]
-[assembly: AssemblyProduct("Zen Barcode")]
-[assembly: AssemblyCopyright("Copyright © Zen Design 2007 - 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,15 +18,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("c4cc1039-5237-438c-b61d-0970c2a9abe1")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-[assembly: AssemblyVersion("2.1.0.0")]
-[assembly: AssemblyFileVersion("2.2.0.0")]

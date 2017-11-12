@@ -1,17 +1,17 @@
 //-----------------------------------------------------------------------
 // <copyright file="Code93.cs" company="Zen Design Corp">
-//     Copyright © Zen Design Corp 2008 - 2011. All rights reserved.
+//     Copyright © Zen Design Corp 2008 - 2012. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-				
+
 namespace Zen.Barcode
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Text;
+	using System;
+	using System.Collections.Generic;
+	using System.Drawing;
+	using System.Text;
 
-    /// <summary>
+	/// <summary>
 	/// <b>Code93GlyphFactory</b> concrete implementation of 
 	/// <see cref="GlyphFactory"/> for providing Code 93 bar-code glyph
 	/// objects.
@@ -20,14 +20,14 @@ namespace Zen.Barcode
 	{
 		#region Private Fields
 		private static Code93GlyphFactory _theFactory;
-		private static object _syncFactory = new object ();
+		private static object _syncFactory = new object();
 
 		private BarGlyph[] _glyphs;
 		private CompositeGlyph[] _compositeGlyphs;
 		#endregion
 
 		#region Private Constructors
-		private Code93GlyphFactory ()
+		private Code93GlyphFactory()
 		{
 		}
 		#endregion
@@ -47,7 +47,7 @@ namespace Zen.Barcode
 					{
 						if (_theFactory == null)
 						{
-							_theFactory = new Code93GlyphFactory ();
+							_theFactory = new Code93GlyphFactory();
 						}
 					}
 				}
@@ -62,7 +62,7 @@ namespace Zen.Barcode
 		/// represent the raw bar-code glyphs for the given bar-code symbology.
 		/// </summary>
 		/// <returns></returns>
-		protected override BarGlyph[] GetGlyphs ()
+		protected override BarGlyph[] GetGlyphs()
 		{
 			if (_glyphs == null)
 			{
@@ -128,7 +128,7 @@ namespace Zen.Barcode
 		/// symbology.
 		/// </summary>
 		/// <returns></returns>
-		protected override CompositeGlyph[] GetCompositeGlyphs ()
+		protected override CompositeGlyph[] GetCompositeGlyphs()
 		{
 			if (_compositeGlyphs == null)
 			{
@@ -239,15 +239,15 @@ namespace Zen.Barcode
 	{
 		#region Private Fields
 		private static Code93Checksum _theChecksum;
-		private static object _syncChecksum = new object ();
+		private static object _syncChecksum = new object();
 		#endregion
 
 		#region Private Constructors
 		/// <summary>
 		/// Initialises a new instance of <see cref="T:Code93Checksum"/> class.
 		/// </summary>
-		private Code93Checksum ()
-			: base (Code93GlyphFactory.Instance)
+		private Code93Checksum()
+			: base(Code93GlyphFactory.Instance)
 		{
 		}
 		#endregion
@@ -266,7 +266,7 @@ namespace Zen.Barcode
 					{
 						if (_theChecksum == null)
 						{
-							_theChecksum = new Code93Checksum ();
+							_theChecksum = new Code93Checksum();
 						}
 					}
 				}
@@ -282,36 +282,36 @@ namespace Zen.Barcode
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public override Glyph[] GetChecksum (string text)
+		public override Glyph[] GetChecksum(string text)
 		{
-			if (string.IsNullOrEmpty (text))
+			if (string.IsNullOrEmpty(text))
 			{
-				throw new ArgumentNullException ("text");
+				throw new ArgumentNullException("text");
 			}
 
 			// Determine checksum
-			char firstCheck = GetChecksumChar (text, 20);
+			char firstCheck = GetChecksumChar(text, 20);
 			text += firstCheck;
-			char secondCheck = GetChecksumChar (text, 15);
+			char secondCheck = GetChecksumChar(text, 15);
 
-			List<Glyph> result = new List<Glyph> ();
-			result.Add (Factory.GetRawGlyph (firstCheck));
-			result.Add (Factory.GetRawGlyph (secondCheck));
-			return result.ToArray ();
+			List<Glyph> result = new List<Glyph>();
+			result.Add(Factory.GetRawGlyph(firstCheck));
+			result.Add(Factory.GetRawGlyph(secondCheck));
+			return result.ToArray();
 		}
 		#endregion
 
 		#region Private Methods
-		private char GetChecksumChar (string text, int weighting)
+		private char GetChecksumChar(string text, int weighting)
 		{
 			int weightedSum = 0;
 			for (int index = 0; index < text.Length; ++index)
 			{
-				int checkValue = Factory.GetRawCharIndex (text[text.Length - index - 1]);
+				int checkValue = Factory.GetRawCharIndex(text[text.Length - index - 1]);
 				int weight = (index % weighting) + 1;
 				weightedSum += (weight * checkValue);
 			}
-			return Factory.GetRawGlyph (weightedSum % 47).Character;
+			return Factory.GetRawGlyph(weightedSum % 47).Character;
 		}
 		#endregion
 	}
@@ -329,8 +329,8 @@ namespace Zen.Barcode
 		/// class.
 		/// </summary>
 		/// <param name="checksum">The checksum.</param>
-		public Code93BarcodeDraw (Code93Checksum checksum)
-			: base (checksum.Factory, checksum, 9)
+		public Code93BarcodeDraw(Code93Checksum checksum)
+			: base(checksum.Factory, checksum, 9)
 		{
 		}
 		#endregion
@@ -341,35 +341,35 @@ namespace Zen.Barcode
 		/// containing default settings for the specified maximum bar height.
 		/// </summary>
 		/// <param name="maxHeight">The maximum barcode height.</param>
-        /// <returns>
-        /// A <see cref="T:BarcodeMetrics"/> object.
-        /// </returns>
-        public override BarcodeMetrics GetDefaultMetrics(int maxHeight)
+		/// <returns>
+		/// A <see cref="T:BarcodeMetrics"/> object.
+		/// </returns>
+		public override BarcodeMetrics GetDefaultMetrics(int maxHeight)
 		{
-			return new BarcodeMetrics (1, 2, maxHeight);
+			return new BarcodeMetrics1d(1, 2, maxHeight);
 		}
 
-        /// <summary>
-        /// Overridden. Gets a <see cref="T:BarcodeMetrics"/> object containing the print
-        /// metrics needed for printing a barcode of the specified physical
-        /// size on a device operating at the specified resolution.
-        /// </summary>
-        /// <param name="desiredBarcodeDimensions">The desired barcode dimensions in hundredth of an inch.</param>
-        /// <param name="printResolution">The print resolution in pixels per inch.</param>
-        /// <param name="barcodeCharLength">Length of the barcode in characters.</param>
-        /// <returns>
-        /// A <see cref="T:BarcodeMetrics"/> object.
-        /// </returns>
-        public override BarcodeMetrics GetPrintMetrics(
-            Size desiredBarcodeDimensions, Size printResolution,
-            int barcodeCharLength)
-        {
-            int maxHeight = desiredBarcodeDimensions.Height * printResolution.Height / 100;
-            int narrowBarWidth = (printResolution.Width * desiredBarcodeDimensions.Width) /
-                (100 * (24 + (barcodeCharLength * 12)));
-            return new BarcodeMetrics(narrowBarWidth, narrowBarWidth * 2, maxHeight);
-        }
-        #endregion
+		/// <summary>
+		/// Overridden. Gets a <see cref="T:BarcodeMetrics"/> object containing the print
+		/// metrics needed for printing a barcode of the specified physical
+		/// size on a device operating at the specified resolution.
+		/// </summary>
+		/// <param name="desiredBarcodeDimensions">The desired barcode dimensions in hundredth of an inch.</param>
+		/// <param name="printResolution">The print resolution in pixels per inch.</param>
+		/// <param name="barcodeCharLength">Length of the barcode in characters.</param>
+		/// <returns>
+		/// A <see cref="T:BarcodeMetrics"/> object.
+		/// </returns>
+		public override BarcodeMetrics GetPrintMetrics(
+			Size desiredBarcodeDimensions, Size printResolution,
+			int barcodeCharLength)
+		{
+			int maxHeight = desiredBarcodeDimensions.Height * printResolution.Height / 100;
+			int narrowBarWidth = (printResolution.Width * desiredBarcodeDimensions.Width) /
+				(100 * (24 + (barcodeCharLength * 12)));
+			return new BarcodeMetrics1d(narrowBarWidth, narrowBarWidth * 2, maxHeight);
+		}
+		#endregion
 
 		#region Protected Methods
 		/// <summary>
@@ -377,18 +377,18 @@ namespace Zen.Barcode
 		/// </summary>
 		/// <param name="text">Text to convert into bar-code.</param>
 		/// <returns>A collection of <see cref="T:Glyph"/> objects.</returns>
-		protected override Glyph[] GetFullBarcode (string text)
+		protected override Glyph[] GetFullBarcode(string text)
 		{
-			List<Glyph> result = new List<Glyph> ();
-			result.AddRange (Factory.GetGlyphs (text));
+			List<Glyph> result = new List<Glyph>();
+			result.AddRange(Factory.GetGlyphs(text));
 			if (Checksum != null)
 			{
-				result.AddRange (Checksum.GetChecksum (text));
+				result.AddRange(Checksum.GetChecksum(text));
 			}
-			result.Insert (0, Factory.GetRawGlyph ('*'));
-			result.Add (Factory.GetRawGlyph ('*'));
-			result.Add (Factory.GetRawGlyph ('|'));
-			return result.ToArray ();
+			result.Insert(0, Factory.GetRawGlyph('*'));
+			result.Add(Factory.GetRawGlyph('*'));
+			result.Add(Factory.GetRawGlyph('|'));
+			return result.ToArray();
 		}
 
 		/// <summary>
@@ -403,10 +403,10 @@ namespace Zen.Barcode
 		/// Currently this method does not account for any "quiet space"
 		/// around the barcode as dictated by each symbology standard.
 		/// </remarks>
-		protected override int GetBarcodeLength (Glyph[] barcode, 
+		protected override int GetBarcodeLength(Glyph[] barcode,
 			int interGlyphSpace, int barMinWidth, int barMaxWidth)
 		{
-			return base.GetBarcodeLength (barcode, interGlyphSpace,
+			return base.GetBarcodeLength(barcode, interGlyphSpace,
 				barMinWidth, barMaxWidth) - (8 * barMinWidth);
 		}
 		#endregion

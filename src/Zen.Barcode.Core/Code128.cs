@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // <copyright file="Code128.cs" company="Zen Design Corp">
-//     Copyright © Zen Design Corp 2008 - 2011. All rights reserved.
+//     Copyright © Zen Design Corp 2008 - 2012. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -786,7 +786,7 @@ namespace Zen.Barcode
 		/// </returns>
 		public override BarcodeMetrics GetDefaultMetrics(int maxHeight)
 		{
-			return new BarcodeMetrics(1, maxHeight);
+			return new BarcodeMetrics1d(1, maxHeight);
 		}
 
 		/// <summary>
@@ -807,7 +807,7 @@ namespace Zen.Barcode
 			int maxHeight = desiredBarcodeDimensions.Height * printResolution.Height / 100;
 			int narrowBarWidth = (printResolution.Width * desiredBarcodeDimensions.Width) /
 				(100 * (24 + (barcodeCharLength * 11)));
-			return new BarcodeMetrics(narrowBarWidth, maxHeight);
+			return new BarcodeMetrics1d(narrowBarWidth, maxHeight);
 		}
 		#endregion
 
