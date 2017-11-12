@@ -46,9 +46,28 @@ namespace Zen.SampleSite
             }
             string text = barcodeText.Text.Trim();
 
+			string scaleText = barcodeScale.Text.Trim();
+			int scale;
+			if (!int.TryParse(scaleText, out scale))
+			{
+				if (symbology == BarcodeSymbology.CodeQr)
+				{
+					scale = 3;
+				}
+				else
+				{
+					scale = 1;
+				}
+			}
+			else if(scale < 1)
+			{
+				scale = 1;
+			}
+
             if (!string.IsNullOrEmpty(text) && symbology != BarcodeSymbology.Unknown)
             {
                 barcodeRender.BarcodeEncoding = symbology;
+				barcodeRender.Scale = scale;
                 barcodeRender.Text = text;
             }
         }

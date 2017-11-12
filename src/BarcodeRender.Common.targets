@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+****************************************************************************************************
+BarcodeRender.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+		  created a backup copy.  Incorrect changes to this file will make it
+		  impossible to load or build your projects from the command-line or the IDE.
+
+This file manages the shared versioning support needed to synchronise all project assembly file
+version numbers and WiX build version numbers
+
+Copyright © Zen Design Corp 2011 - 2012.  All rights reserved.
+****************************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+				 ToolsVersion="4.0"
+				 InitialTargets="TFSBuildVersions">
+	<PropertyGroup>
+		<!-- Define major and minor version numbers here -->
+		<TFSMajorBuildNumber>3</TFSMajorBuildNumber>
+		<TFSMinorBuildNumber>1</TFSMinorBuildNumber>
+	</PropertyGroup>
+
+	<!-- This makes the project files a dependency of all targets so that things rebuild if they change -->
+	<PropertyGroup>
+		<MSBuildAllProjects>$(MSBuildAllProjects);BarcodeRender.Common.targets;</MSBuildAllProjects>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!-- Figure out where the TFS build tasks are. -->
+		<TeamBuildRefPath Condition="'$(TeamBuildRefPath)'==''">$(VS100COMNTOOLS)..\IDE\PrivateAssemblies\</TeamBuildRefPath>
+		<!-- Figure out where I'm being called from, TFS Build or a developer 
+		 machine. BuildUri and TeamFoundationServerUrl properties are the 
+		 ones that tell me I'm running under TFS Build.-->
+		<ZenBuildType>DEVELOPERBUILD</ZenBuildType>
+		<ZenBuildType Condition="'$(BuildUri)'!='' and '$(TeamFoundationServerUrl)'!=''">TFSBUILD</ZenBuildType>
+
+		<!-- The following two properties must be set the way they are to get
+		 Microsoft.TeamFoundation.Build.targets to work properly the way I 
+		 am using it.-->
+		<!-- The TFS targets from Microsoft are supposed to only be used by the 
+		 build agent but I just want the properties from the build. Setting 
+		 this property to false allows me to access the GetBuildProperties 
+		 task that does all the work.-->
+		<IsDesktopBuild>false</IsDesktopBuild>
+		<!-- Make sure I'm using the latest tasks from TFS 2010 Build and not
+		 the ones from TFS 2008 Build.-->
+		<ProjectFileVersion>3</ProjectFileVersion>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\TeamBuild\Microsoft.TeamFoundation.Build.targets"/>
+
+	<!-- Set appropriate defaults for all version files. -->
+	<PropertyGroup>
+		<!-- The output directory for all shared version files. -->
+		<SharedVersionOutputDirectory Condition=" '$(SharedVersionOutputDirectory)' == '' and '$(ZenBuildType)' == 'TFSBUILD' ">$(MSBuildStartupDirectory)\Versioning\</SharedVersionOutputDirectory>
+		<!-- The output directory for all shared version files. -->
+		<SharedVersionOutputDirectory Condition=" '$(SharedVersionOutputDirectory)' == '' and '$(ZenBuildType)' == 'DEVELOPERBUILD' and '$(SolutionDir)' != '' ">$(SolutionDir)Versioning\</SharedVersionOutputDirectory>
+		<!-- The output directory for all shared version files. -->
+		<SharedVersionOutputDirectory Condition=" '$(SharedVersionOutputDirectory)' == '' and '$(ZenBuildType)' == 'DEVELOPERBUILD' ">C:\Projects\2008\BarcodeRender\VS2010_NET35\Versioning\</SharedVersionOutputDirectory>
+
+		<!-- The name of the C# shared version file. -->
+		<CSharpAssemblyVersionFile Condition=" '$(CSharpAssemblyVersionFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblyFileVersion.cs</CSharpAssemblyVersionFile>
+		<!-- The name of the VB shared version file. -->
+		<VBAssemblyVersionFile Condition=" '$(VBAssemblyVersionFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblyFileVersion.vb</VBAssemblyVersionFile>
+		<!-- The name of the C++/CLI shared version file. -->
+		<CPPCLIAssemblyVersionFile Condition=" '$(CPPCLIAssemblyVersionFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblyFileVersion.cpp</CPPCLIAssemblyVersionFile>
+		<!-- The name of the C++ header shared version file. -->
+		<CPPAssemblyVersionFile Condition=" '$(CPPAssemblyVersionFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblyFileVersion.h</CPPAssemblyVersionFile>
+		<!-- The name of the WiX shared version file. -->
+		<WiXAssemblyVersionFile Condition=" '$(WiXAssemblyVersionFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblyFileVersion.wxi</WiXAssemblyVersionFile>
+		<!-- The name of the Text shared version file. -->
+		<TextAssemblyVersionFile Condition=" '$(TextAssemblyVersionFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblyFileVersion.txt</TextAssemblyVersionFile>
+		<!-- The name of the C# shared company/product file. -->
+		<CSharpSuiteProductInfoFile Condition=" '$(CSharpSuiteProductInfoFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblySuiteInfo.cs</CSharpSuiteProductInfoFile>
+		<!-- The name of the C# shared assembly file. -->
+		<CSharpCoreAssemblyVersionFile Condition=" '$(CSharpCoreAssemblyVersionFile)'=='' ">$(SharedVersionOutputDirectory)SharedAssemblyVersion.cs</CSharpCoreAssemblyVersionFile>
+	</PropertyGroup>
+
+	<!-- Set up the dependency on the InitializeBuildProperties task only 
+	   if running under TFS Build. -->
+	<PropertyGroup Condition="'$(ZenBuildType)'=='TFSBUILD'">
+		<DependOnGetBuildProperties>InitializeBuildProperties</DependOnGetBuildProperties>
+	</PropertyGroup>
+
+	<!-- Generate all types of version file -->
+	<Target Name="TFSBuildVersions"
+					DependsOnTargets="WriteSharedCSharpAssemblyVersionFile;WriteSharedVBAssemblyVersionFile;WriteSharedCPPCLIAssemblyVersionFile;WriteSharedCPPAssemblyVersionFile;WriteSharedWiXAssemblyVersionFile;WriteSharedTextAssemblyVersionFile;" />
+
+	<!-- The TFSBuildFileVersion target builds the string suitable for using to 
+	   generate an acceptable AssemblyFileVersion attribute with the exact
+	   build being done by TFS Build 2010.
+	   
+	   This assumes a format of $(BuildDefinitionName)_$(Date:yyyyMMdd)$(Rev:.r) 
+	   for the build number format. Tweak if you are using a different format.
+	   
+	   For the code below, the $(BuildNumber) property from TFS Build 2010 will 
+	   look like: Dev Branch Daily Build_20091107.14
+	   The important properties output of this task are those that start with 
+	   TFS and are shown below.
+	   (Property)                 (Example Value)
+	   TFSFullBuildVersionString  3.1.21107.14
+	   TFSBuildNumber             21107
+	   TFSCalculatedYear          2
+	   TFSBuildYear               2009
+	   TFSBuildMonth              11
+	   TFSBuildDay                07
+	   TFSBuildRevision           14
+	   -->
+	<Target Name="TFSBuildFileVersion"
+					DependsOnTargets="$(DependOnGetBuildProperties)">
+
+		<!-- Do the error checking to ensure the appropriate items are defined.-->
+		<Error Condition="'$(TFSMajorBuildNumber)'==''"
+					 Text="TFSMajorBuildNumber is not defined."/>
+		<Error Condition="'$(TFSMinorBuildNumber)'==''"
+					 Text="TFSMinorBuildNumber is not defined."/>
+
+		<PropertyGroup>
+			<!-- The separator string between the $(BuildDefinition) and the date 
+		   revision.-->
+			<BuildDefSeparatorValue>_</BuildDefSeparatorValue>
+			<!-- The separator between the date and revision.-->
+			<DateVerSeparatorValue>.</DateVerSeparatorValue>
+		</PropertyGroup>
+
+		<!-- The calculations when run on a TFS Build Server.-->
+		<PropertyGroup Condition="'$(ZenBuildType)'=='TFSBUILD'">
+			<!-- Get where the timestamp starts-->
+			<tmpStartPosition>$([MSBuild]::Add($(BuildDefinitionName.Length), $(BuildDefSeparatorValue.Length)))</tmpStartPosition>
+			<!-- Get the date and version portion. ex: 20091107.14-->
+			<tmpFullDateAndVersion>$(BuildNumber.Substring($(tmpStartPosition)))</tmpFullDateAndVersion>
+			<!-- Find the position where the date and version separator splits 
+		   the string. -->
+			<tmpDateVerSepPos>$(tmpFullDateAndVersion.IndexOf($(DateVerSeparatorValue)))</tmpDateVerSepPos>
+			<!-- Grab the date. ex: 20081107-->
+			<tmpFullBuildDate>$(tmpFullDateAndVersion.SubString(0,$(tmpDateVerSepPos)))</tmpFullBuildDate>
+			<!-- Bump past the separator. -->
+			<tmpVerStartPos>$([MSBuild]::Add($(tmpDateVerSepPos),1))</tmpVerStartPos>
+			<!-- Get the revision string. ex: 14-->
+			<TFSBuildRevision>$(tmpFullDateAndVersion.SubString($(tmpVerStartPos)))</TFSBuildRevision>
+			<!-- Get the pieces so if someone wants to customize, they have them.-->
+			<TFSBuildYear>$(tmpFullBuildDate.SubString(0,4))</TFSBuildYear>
+			<TFSBuildMonth>$(tmpFullBuildDate.SubString(4,2))</TFSBuildMonth>
+			<TFSBuildDay>$(tmpFullBuildDate.SubString(6,2))</TFSBuildDay>
+		</PropertyGroup>
+
+		<PropertyGroup Condition="'$(ZenBuildType)'=='DEVELOPERBUILD'">
+			<TFSBuildRevision>65535</TFSBuildRevision>
+			<TFSBuildYear>$([System.DateTime]::Now.Year.ToString("0000"))</TFSBuildYear>
+			<TFSBuildMonth>$([System.DateTime]::Now.Month.ToString("00"))</TFSBuildMonth>
+			<TFSBuildDay>$([System.DateTime]::Now.Day.ToString("00"))</TFSBuildDay>
+		</PropertyGroup>
+
+		<PropertyGroup>
+			<TFSCalculatedYear>$([MSBuild]::Modulo($([MSBuild]::Subtract($(TFSBuildYear),2011)),6))</TFSCalculatedYear>
+
+			<TFSBuildNumber>$(TFSCalculatedYear)$(TFSBuildMonth)$(TFSBuildDay)</TFSBuildNumber>
+
+			<TFSFullBuildVersionString>$(TFSMajorBuildNumber).$(TFSMinorBuildNumber).$(TFSBuildNumber).$(TFSBuildRevision)</TFSFullBuildVersionString>
+		</PropertyGroup>
+
+		<!-- Do some error checking as empty properties screw up everything.-->
+		<Error Condition="'$(TFSFullBuildVersionString)'==''"
+					 Text="Error building the TFSFullBuildVersionString property"/>
+		<Error Condition="'$(TFSBuildNumber)'==''"
+					 Text="Error building the TFSBuildNumber property"/>
+		<Error Condition="'$(TFSCalculatedYear)'==''"
+					 Text="Error building the TFSCalculatedYear property"/>
+		<Error Condition="'$(TFSBuildDay)'==''"
+					 Text="Error building the TFSBuildDay property"/>
+		<Error Condition="'$(TFSBuildMonth)'==''"
+					 Text="Error building the TFSBuildMonth property"/>
+		<Error Condition="'$(TFSBuildYear)'==''"
+					 Text="Error building the TFSBuildYear property"/>
+		<Error Condition="'$(TFSBuildRevision)'==''"
+					 Text="Error building the TFSBuildRevision property"/>
+	</Target>
+
+	<Target Name="WriteSharedCSharpAssemblyVersionFile"
+					DependsOnTargets="TFSBuildFileVersion"
+					Condition="('$(ZenBuildType)'=='TFSBUILD') or 
+				(('$(ZenBuildType)'=='DEVELOPERBUILD') and 
+				 (!Exists($(CSharpAssemblyVersionFile))))">
+		<ItemGroup>
+			<CSharpLines Include="
+// &lt;auto-generated/&gt;
+// This file auto generated by the Zen TFS 2010 Build Number Targets.
+using System%3B
+using System.Reflection%3B
+[assembly:AssemblyFileVersion(&quot;$(TFSFullBuildVersionString)&quot;)]
+"/>
+		</ItemGroup>
+		<WriteLinesToFile Overwrite="true"
+											File="$(CSharpAssemblyVersionFile)"
+											Lines="@(CSharpLines)" />
+	</Target>
+
+	<Target Name="WriteSharedVBAssemblyVersionFile"
+					DependsOnTargets="TFSBuildFileVersion"
+					Condition="('$(ZenBuildType)'=='TFSBUILD') or 
+				(('$(ZenBuildType)'=='DEVELOPERBUILD') and 
+				 (!Exists($(VBAssemblyVersionFile))))">
+		<ItemGroup>
+			<VBLines Include="
+' This file auto generated by the Zen TFS 2010 Build Number Targets.
+using System%3B
+using System.Reflection%3B
+&lt;assembly:AssemblyFileVersion(&quot;$(TFSFullBuildVersionString)&quot;)&gt;
+"/>
+		</ItemGroup>
+
+		<WriteLinesToFile Overwrite="true"
+											File="$(VBAssemblyVersionFile)"
+											Lines="@(VBLines)"/>
+	</Target>
+
+	<Target Name="WriteSharedCPPCLIAssemblyVersionFile"
+					DependsOnTargets="TFSBuildFileVersion"
+					Condition="('$(ZenBuildType)'=='TFSBUILD') or 
+				(('$(ZenBuildType)'=='DEVELOPERBUILD') and 
+				 (!Exists($(CPPCLIAssemblyVersionFile))))">
+		<ItemGroup>
+			<CPPCLILines Include="
+// This file auto generated by the Zen TFS 2010 Build Number Targets.
+#include &quot;stdafx.h&quot;
+using namespace System%3B
+using namespace System::Reflection%3B
+[assembly:AssemblyFileVersion ( &quot;$(TFSFullBuildVersionString)&quot; )];
+"/>
+		</ItemGroup>
+
+		<WriteLinesToFile Overwrite="true"
+											File="$(CPPCLIAssemblyVersionFile)"
+											Lines="@(CPPCLILines)"/>
+	</Target>
+
+	<Target Name="WriteSharedCPPAssemblyVersionFile"
+					DependsOnTargets="TFSBuildFileVersion"
+					Condition="('$(ZenBuildType)'=='TFSBUILD') or 
+				(('$(ZenBuildType)'=='DEVELOPERBUILD') and 
+				 (!Exists($(CPPAssemblyVersionFile))))">
+		<ItemGroup>
+			<CPPLines Include="
+// This file auto generated by the Zen TFS 2010 Build Number Targets.
+#ifndef _SHAREDFILEVERSION_H
+#define _SHAREDFILEVERSION_H
+
+#define szMajorMinor                &quot;$(TFSCalculatedYear).$(TFSMinorBuildNumber)&quot;
+#define szMajorMinorBuild           &quot;$(TFSCalculatedYear).$(TFSMinorBuildNumber).$(TFSBuildNumber)&quot;
+#define szMajorMinorBuildRevision   &quot;$(TFSFullBuildVersionString)&quot;
+
+#define rcMajor    $(TFSCalculatedYear)
+#define rcMinor    $(TFSMinorBuildNumber)
+#define rcBuild    $(TFSBuildNumber)
+#define rcRevision $(TFSBuildRevision)
+
+#endif // _SHAREDFILEVERSION_H"/>
+		</ItemGroup>
+
+		<WriteLinesToFile Overwrite="true"
+											File="$(CPPAssemblyVersionFile)"
+											Lines="@(CPPCLILines)"/>
+	</Target>
+
+	<Target Name="WriteSharedWiXAssemblyVersionFile"
+					DependsOnTargets="TFSBuildFileVersion"
+					Condition="('$(ZenBuildType)'=='TFSBUILD') or 
+				(('$(ZenBuildType)'=='DEVELOPERBUILD') and 
+				 (!Exists($(WiXAssemblyVersionFile))))">
+		<ItemGroup>
+			<WiXLines Include="
+&lt;!-- This file auto generated by the Zen TFS 2010 Build Number Targets. --&gt;
+&lt;Include xmlns=&quot;http://schemas.microsoft.com/wix/2006/wi&quot;&gt;
+  &lt;?define InstallVersion=&quot;$(TFSFullBuildVersionString)&quot;?&gt;
+&lt;/Include&gt;
+"/>
+		</ItemGroup>
+
+		<WriteLinesToFile Overwrite="true"
+											File="$(WiXAssemblyVersionFile)"
+											Lines="@(WiXLines)"/>
+	</Target>
+
+	<Target Name="WriteSharedTextAssemblyVersionFile"
+					DependsOnTargets="TFSBuildFileVersion"
+					Condition="('$(ZenBuildType)'=='TFSBUILD') or 
+				(('$(ZenBuildType)'=='DEVELOPERBUILD') and 
+				 (!Exists($(TextAssemblyVersionFile))))">
+		<ItemGroup>
+			<TXTLines Include="$(TFSFullBuildVersionString)"/>
+		</ItemGroup>
+
+		<WriteLinesToFile Overwrite="true"
+											File="$(TextAssemblyVersionFile)"
+											Lines="@(TXTLines)"/>
+	</Target>
+
+</Project>

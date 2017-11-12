@@ -109,7 +109,10 @@ namespace BarcodeRender
 			{
 				try
 				{
-					BackgroundImage = BarcodeDrawFactory.GetSymbology (_symbology).Draw (Text, _maxBarHeight);
+					var drawObject = BarcodeDrawFactory.GetSymbology (_symbology);
+					var metrics = drawObject.GetDefaultMetrics(_maxBarHeight);
+					metrics.Scale = 2;
+					BackgroundImage = drawObject.Draw (Text, metrics);
 				}
 				catch
 				{

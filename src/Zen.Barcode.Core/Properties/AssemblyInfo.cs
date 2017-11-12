@@ -9,9 +9,6 @@ using System.Security;
 [assembly: AssemblyTitle("Zen Barcode Core")]
 [assembly: AssemblyDescription("Barcode Rendering Framework core.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Zen Design Corp")]
-[assembly: AssemblyProduct("Zen Barcode")]
-[assembly: AssemblyCopyright("Copyright © Zen Design Corp 2006 - 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -23,14 +20,6 @@ using System.Security;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("dc2bb779-4f63-4d14-8db7-7865586c694a")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-[assembly: AssemblyVersion("2.1.0.0")]
-[assembly: AssemblyFileVersion("2.2.0.0")]
+// Need to allow partially trusted callers to get SSRS to call our builder
+//	from the header/footer...
+[assembly: AllowPartiallyTrustedCallers]
