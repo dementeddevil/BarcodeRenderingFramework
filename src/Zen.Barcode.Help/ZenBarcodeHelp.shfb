@@ -1,0 +1,77 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath="..\Zen.Barcode.Core\bin\Debug\Zen.Barcode.Core.dll" xmlCommentsPath="..\Zen.Barcode.Core\bin\Debug\Zen.Barcode.Core.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\Zen.Barcode.Design\bin\Debug\Zen.Barcode.Design.dll" xmlCommentsPath="..\Zen.Barcode.Design\bin\Debug\Zen.Barcode.Design.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\Zen.Barcode.Web\bin\Debug\Zen.Barcode.Web.dll" xmlCommentsPath="..\Zen.Barcode.Web\bin\Debug\Zen.Barcode.Web.xml" commentsOnly="False" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False" />
+        <namespaceSummaryItem name="Zen.Barcode" isDocumented="True">Contains all core barcode rendering classes.</namespaceSummaryItem>
+        <namespaceSummaryItem name="Zen.Barcode.Properties" isDocumented="False" />
+        <namespaceSummaryItem name="Zen.Barcode.Web" isDocumented="True">Contains all ASP.NET barcode support objects.</namespaceSummaryItem>
+        <namespaceSummaryItem name="Zen.Barcode.Web.Design" isDocumented="True">Contains design-time components to aid the use of barcode components from visual design tools such as the Visual Studio IDE.</namespaceSummaryItem>
+        <namespaceSummaryItem name="Zen.Barcode.Web.Xsl" isDocumented="True">Contains barcode-to-XSL bridge components.</namespaceSummaryItem>
+    </namespaceSummaries>
+    <componentConfigurations>
+        <component id="Code Block Component" enabled="True" configuration="&lt;component type=&quot;SandcastleBuilder.Components.CodeBlockComponent&quot; assembly=&quot;{@SHFBFolder}SandcastleBuilder.Components.dll&quot; id=&quot;Code Block Component&quot;&gt;&lt;!-- Base path for relative filenames in source attributes (optional) --&gt;&lt;basePath value=&quot;{@ProjectFolder}..&quot; /&gt;&lt;!-- Connect to language filter (optional).  If omitted,&#xD;&#xA;                 language filtering is enabled by default. --&gt;&lt;languageFilter value=&quot;true&quot; /&gt;&lt;!-- Code colorizer options (required).&#xD;&#xA;                 Attributes:&#xD;&#xA;                    Language syntax configuration file (required)&#xD;&#xA;                    XSLT style file (required)&#xD;&#xA;                    &quot;Copy&quot; image file URL (required)&#xD;&#xA;                    Default language (optional)&#xD;&#xA;                    Enable line numbering (optional)&#xD;&#xA;                    Enable outlining (optional)&#xD;&#xA;                    Tab size override (optional, 0 = Use syntax file setting)&#xD;&#xA;                    Use language name as default title (optional) --&gt;&lt;colorizer syntaxFile=&quot;{@SHFBFolder}Colorizer\highlight.xml&quot; styleFile=&quot;{@SHFBFolder}Colorizer\highlight.xsl&quot; copyImageUrl=&quot;../icons/CopyCode.gif&quot; language=&quot;cs&quot; numberLines=&quot;false&quot; outlining=&quot;true&quot; tabSize=&quot;4&quot; defaultTitle=&quot;true&quot; /&gt;&lt;/component&gt;" />
+        <component id="Cached MSDN URL References" enabled="True" configuration="&lt;component id=&quot;Cached MSDN URL References&quot; type=&quot;SandcastleBuilder.Components.CachedResolveReferenceLinksComponent&quot; assembly=&quot;{@SHFBFolder}SandcastleBuilder.Components.dll&quot;&gt;&#xD;&#xA;&lt;cache filename=&quot;{@AppDataFolder}Cache\MsdnUrl.cache&quot; /&gt;&#xD;&#xA;&lt;targets base=&quot;{@SandcastlePath}Data\Reflection&quot; recurse=&quot;true&quot; files=&quot;*.xml&quot; type=&quot;{@SDKLinks}&quot; /&gt;&#xD;&#xA;&lt;targets files=&quot;reflection.xml&quot; type=&quot;{@ProjectLinks}&quot; /&gt;&#xD;&#xA;&lt;/component&gt;" />
+        <component id="Cached Reflection Index Data" enabled="True" configuration="&lt;component id=&quot;Cached Reflection Index Data&quot; type=&quot;SandcastleBuilder.Components.CachedCopyFromIndexComponent&quot; assembly=&quot;{@SHFBFolder}SandcastleBuilder.Components.dll&quot;&gt;&#xD;&#xA;&lt;index name=&quot;reflection&quot; value=&quot;/reflection/apis/api&quot; key=&quot;@id&quot; cache=&quot;10&quot;&gt;&#xD;&#xA;  &lt;cache base=&quot;{@SandcastlePath}Data\Reflection&quot; recurse=&quot;true&quot; files=&quot;*.xml&quot; cacheFile=&quot;{@AppDataFolder}Cache\Reflection.cache&quot; /&gt;&#xD;&#xA;  &lt;data files=&quot;reflection.xml&quot; /&gt;&#xD;&#xA;&lt;/index&gt;&#xD;&#xA;&lt;copy name=&quot;reflection&quot; source=&quot;*&quot; target=&quot;/document/reference&quot; /&gt;&#xD;&#xA;&lt;/component&gt;" />
+    </componentConfigurations>
+    <ProjectSummary>&lt;h1&gt;Zen Barcode Rendering Framework&lt;/h1&gt;
+&lt;br /&gt;
+&lt;p&gt;
+The barcode framework started life as a royalty-free method of embedding barcodes into a web-site project without having to use custom fonts and has since developed into a full-blown barcode rendering suite.
+&lt;/p&gt;
+&lt;p&gt;
+The framework supports Windows Forms applications as well as ASP.NET - the ASP.NET component can also be leveraged by an XSLT namespace extension to provide barcode rendering capabilities to XSLT stylesheets - this feature can be used to generate HTML reports from SQL XML resultset information!
+&lt;/p&gt;
+&lt;p&gt;
+The framework is being actively developed into a single royalty-free class library for Microsoft (r) .NET Framework with the aim to provide support for all 2D barcode symbologies. Ultimately even 3D barcodes will be supported although that will mean I need to buy another scanner...
+&lt;/p&gt;
+&lt;p&gt;
+Currently the project is located on the &lt;a href="http://www.codeplex.com/BarcodeRender"&gt;CodePlex&lt;/a&gt; web-site so if you have any comments and suggestions please feel free to leave them there!
+&lt;/p&gt;
+&lt;p&gt;
+Enjoy the framework&lt;br /&gt;The Barcode Rendering Framework Team
+&lt;/p&gt;</ProjectSummary>
+    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter</MissingTags>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>.\Help\</OutputPath>
+    <SandcastlePath path="" />
+    <WorkingPath path="" />
+    <CleanIntermediates>False</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>Help1xAndHelp2x</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>2.0.50727</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>False</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle />
+    <HelpTitle>Zen Barcode Framework</HelpTitle>
+    <HtmlHelpName>ZenBarcode</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref />
+    <CopyrightText>© Zen Design 2006 - 2008</CopyrightText>
+    <FeedbackEMailAddress />
+    <FeedbackEMailLinkText />
+    <HeaderText>Barcode Framework Version: v2.0.3.0</HeaderText>
+    <FooterText />
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>Prototype</PresentationStyle>
+    <NamingMethod>Guid</NamingMethod>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>False</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>False</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>
