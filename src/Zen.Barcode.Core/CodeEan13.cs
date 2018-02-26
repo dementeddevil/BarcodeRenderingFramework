@@ -362,7 +362,7 @@ namespace Zen.Barcode
 				0x0E, // OOEEEO
 				0x13, // OEOOEE
 				0x19, // OEEOOE
-				0x1D, // OEEEOE
+				0x1C, // OEEEOO
 				0x15, // OEOEOE
 				0x16, // OEOEEO
 				0x1A, // OEEOEO
