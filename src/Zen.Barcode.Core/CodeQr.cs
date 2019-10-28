@@ -1264,6 +1264,8 @@ namespace Zen.Barcode
 					Version = temp.Version,
 					EncodeMode = temp.EncodeMode,
 					ErrorCorrection = temp.ErrorCorrect,
+                    ForegroundColor = temp.ForegroundColor,
+                    BackgroundColor = temp.BackgroundColor
 				};
 		}
 
@@ -1349,7 +1351,25 @@ namespace Zen.Barcode
 			get;
 			set;
 		}
-	}
+
+        /// <summary>
+        /// Color of QR code
+        /// </summary>
+        public Color ForegroundColor
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Color of background of QR code
+        /// </summary>
+        public Color BackgroundColor
+        {
+            get;
+            set;
+        }
+    }
 
 	/// <summary>
 	/// Defines the QR barcode encoding methods.
