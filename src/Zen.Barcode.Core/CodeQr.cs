@@ -1264,8 +1264,8 @@ namespace Zen.Barcode
 					Version = temp.Version,
 					EncodeMode = temp.EncodeMode,
 					ErrorCorrection = temp.ErrorCorrect,
-                    ForegroundColor = temp.ForegroundColor,
-                    BackgroundColor = temp.BackgroundColor
+					ForegroundColor = temp.ForegroundColor,
+					BackgroundColor = temp.BackgroundColor
 				};
 		}
 
